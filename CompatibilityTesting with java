@@ -1,0 +1,60 @@
+package Prodigy;
+
+import java.util.List;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.testng.annotations.Optional;
+public class CompatibilityTesting {
+    WebDriver driver;
+   // Import Optional annotation
+
+    @BeforeMethod
+    @Parameters("browser")
+    public void setup(@Optional("chrome") String browser) { // Default to Chrome
+        if (browser.equalsIgnoreCase("chrome")) {
+            WebDriverManager.chromedriver().setup();
+            driver = new ChromeDriver();
+        } else if (browser.equalsIgnoreCase("edge")) {
+            WebDriverManager.edgedriver().setup();
+            driver = new EdgeDriver();
+        } else {
+            throw new IllegalArgumentException("Unsupported browser: " + browser);
+        }
+        
+        driver.manage().window().maximize();
+        driver.get("https://shoplane-by-lassie.netlify.app/");
+    }
+
+
+    @Test
+    public void brokenLinksTest() {
+        try {
+            List<WebElement> elements = driver.findElements(By.tagName("a"));
+            System.out.println("Number of links: " + elements.size());
+
+            for (WebElement element : elements) {
+                String linkText = element.getText().trim();
+                if (!linkText.isEmpty()) {
+                    System.out.println("Link text: " + linkText);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @AfterMethod
+    public void teardown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+}
