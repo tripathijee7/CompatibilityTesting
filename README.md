@@ -1,4 +1,5 @@
 📌 Compatibility Testing with Selenium & TestNG
+
 🚀 This project focuses on cross-browser compatibility testing using Selenium WebDriver and TestNG.
 It verifies a simple web page across Chrome and Edge, checks for broken links, and detects layout issues.
 
